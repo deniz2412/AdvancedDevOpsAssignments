@@ -1,1 +1,11 @@
 /.idea/
+/terraform/modules/create-machine/.terraform.lock.hcl
+/terraform/modules/create-resource-group/.terraform.lock.hcl
+/terraform/modules/deploy-k8s/.terraform.lock.hcl
+/terraform/modules/import-resource-group/.terraform.lock.hcl
+/terraform/.terraform.lock.hcl
+/terraform/terraform.tfstate
+/terraform/terraform.tfstate.backup
+/terraform/modules/create-resource-group/.terraform/providers/registry.terraform.io/hashicorp/azurerm/3.27.0/linux_amd64/terraform-provider-azurerm_v3.27.0_x5
+/terraform/modules/deploy-k8s/.terraform/providers/registry.terraform.io/hashicorp/azurerm/3.29.1/windows_amd64/terraform-provider-azurerm_v3.29.1_x5.exe
+/ansible/playbooks/vars/vault.yml
