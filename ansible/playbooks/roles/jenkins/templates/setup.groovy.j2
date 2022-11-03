@@ -1,0 +1,44 @@
+import hudson.security.*
+import jenkins.model.*
+
+Jenkins instance = Jenkins.getInstance()
+String securityRealm = instance.getSecurityRealm().getClass().getSimpleName()
+String authorizationStrategy = instance.getAuthorizationStrategy().getClass().getSimpleName()
+
+
+SecurityRealm hudsonRealm = new HudsonPrivateSecurityRealm(false)
+List usersData = hudsonRealm.getAllUsers()
+List users = usersData.collect { it.toString() }
+
+   // Create the admin user account if it doesn't already exist
+if (! ("{{ jenkins_master_admin_name }}" in users)) {
+    println("--> Creating local admin user")
+
+    hudsonRealm.createAccount("{{ jenkins_master_admin_name }}", "{{ jenkins_master_admin_pass }}")
+    instance.setSecurityRealm(hudsonRealm)
+    instance.save()
+}
+
+
+// Setup Authorization Strategy
+if (
+        {{ 'true' if jenkins_master_authorization_strategy == 'matrix' else 'false' }} &&
+        instance.pluginManager.getPlugin("matrix-auth") != null &&
+        authorizationStrategy != "GlobalMatrixAuthorizationStrategy") {
+    println("--> Setting up GlobalMatrixAuthorizationStrategy")
+
+    Class classDefinition = Class.forName("hudson.security.GlobalMatrixAuthorizationStrategy")
+    AuthorizationStrategy strategy = (AuthorizationStrategy) classDefinition.newInstance()
+    strategy.add(Jenkins.ADMINISTER, "{{ jenkins_master_admin_name }}")
+    instance.setAuthorizationStrategy(strategy)
+    instance.save()
+} else if (
+        {{ 'true' if jenkins_master_authorization_strategy == 'full_once_logged' else 'false' }} &&
+        authorizationStrategy != "FullControlOnceLoggedInAuthorizationStrategy") {
+    println("--> Setting up FullControlOnceLoggedInAuthorizationStrategy")
+
+    AuthorizationStrategy strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+
+    instance.setAuthorizationStrategy(strategy)
+    instance.save()
+}

@@ -1,0 +1,35 @@
+---
+# tasks file for role-jenkins
+- include_tasks: install.yml
+- include_tasks: configure.yml
+
+- name: Jenkins started and runs on startup
+  service: 
+    name: jenkins 
+    state: started
+    enabled: yes
+
+- name: Wait for Jenkins to start up 
+  uri:
+    url: "http://{{ jenkins_listen_addr }}:{{ jenkins_http_port }}/cli/"
+    method: GET
+    return_content: "yes"
+    timeout: 5
+    body_format: raw
+    follow_redirects: "no"
+    status_code: 200,403
+  register: result
+  until: (result.status == 403 or result.status == 200) and (result.content.find("Please wait while") == -1)
+  retries: 10
+  delay: 6
+  changed_when: false
+  check_mode: false
+
+- name: Remove init script
+  file:
+    path: "{{ jenkins_home }}/init.groovy.d/initial-user.groovy"
+    state: absent
+
+#- include_tasks: plugins.yml
+
+  

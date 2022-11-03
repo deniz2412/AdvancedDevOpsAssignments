@@ -1,0 +1,160 @@
+---
+# tasks file for jenkins
+
+- name: add jenkins apt-key
+  apt_key:
+    url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
+    state: present
+  tags: 
+   - jenkins_install
+
+- name: add jenkins repo
+  apt_repository:
+    repo: "deb http://pkg.jenkins.io/debian-stable binary/"
+    state: present
+    filename: jenkins
+    update_cache: yes
+  tags: 
+   - jenkins_install
+
+- name: install java
+  apt:
+    name: openjdk-11-jdk
+    state: present
+    update_cache: yes
+  tags: 
+   - jenkins_install
+
+- name: install jenkins
+  apt:
+    name: jenkins
+    state: present
+    update_cache: yes
+  tags: 
+   - jenkins_install
+
+- name: Configure Jenkins
+  template:
+    src: jenkins.j2
+    dest: /var/lib/jenkins
+  tags:
+    - jenkins_config
+- name: Restart Jenkins service
+  service:
+    name: "jenkins"
+    state: restarted
+
+
+- name: Create init.d directory
+  file:
+    path: "{{ jenkins_master_config_jenkins_home }}/init.groovy.d"
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+  tags:
+    - jenkins_config
+    - jenkins_config_groovy
+
+- name: Setup with basic Groovy script
+  template:
+    src: setup.groovy.j2
+    dest: "{{ jenkins_master_config_jenkins_home }}/init.groovy.d/setup.groovy"
+    owner: jenkins
+    group: jenkins
+    mode: 0640
+  tags:
+    - jenkins_config
+    - jenkins_config_groovy
+
+- name: Restart Jenkins service
+  service:
+    name: "jenkins"
+    state: restarted
+
+- name: Enable Jenkins services
+  service:
+    name: "jenkins"
+    enabled: yes
+  tags:
+    - jenkins_service
+
+- name: Make sure the Jenkins services is running
+  service:
+    name: "jenkins"
+    state: started
+  register: jenkins_master_service_started
+  tags:
+    - jenkins_service
+
+  when: >
+    jenkins_master_service_started is defined and
+    jenkins_master_service_started.changed
+  tags:
+    - jenkins_service
+
+- name: Install plugins without a specific version
+  jenkins_plugin:
+    name: "{{ item.key }}"
+  args: "{{ jenkins_master_plugins_params }}"
+  register: jenkins_master_plugin_unversioned
+  when: >
+    item.value == None or
+    'version' not in item.value
+  with_dict: "{{ jenkins_master_plugins }}"
+  tags:
+    - jenkins_plugins
+
+- name: Initiate the fact
+  set_fact:
+    jenkins_restart_required: no
+  tags:
+    - jenkins_plugins
+
+- name: Check if restart is required by any of the unversioned plugins
+  set_fact:
+    jenkins_restart_required: yes
+  when: item.changed
+  with_items: "{{ jenkins_master_plugin_unversioned.results }}"
+  tags:
+    - jenkins_plugins
+
+- name: Restart Jenkins if required
+  service:
+    name: jenkins
+    state: restarted
+  when: jenkins_restart_required
+  tags:
+    - jenkins_plugins
+
+
+- name: Reset the fact
+  set_fact:
+    jenkins_restart_required: no
+  when: jenkins_restart_required
+  tags:
+    - jenkins_plugins
+
+- name: Plugin pinning
+  jenkins_plugin:
+    name: "{{ item.key }}"
+    state: "{{ 'pinned' if item.value['pinned'] else 'unpinned'}}"
+  args: "{{ jenkins_master_plugins_params }}"
+  when: >
+    item.value != None and
+    'pinned' in item.value
+  with_dict: "{{ jenkins_master_plugins }}"
+  tags:
+    - jenkins_plugins
+
+- name: Plugin enabling
+  jenkins_plugin:
+    name: "{{ item.key }}"
+    state: "{{ 'enabled' if item.value['enabled'] else 'disabled'}}"
+  args: "{{ jenkins_master_plugins_params }}"
+  when: >
+    item.value != None and
+    'enabled' in item.value
+  with_dict: "{{ jenkins_master_plugins }}"
+  tags:
+    - jenkins_plugins

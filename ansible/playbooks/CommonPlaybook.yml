@@ -1,0 +1,25 @@
+---
+- name: Common tasks
+  hosts: target
+  vars_files:
+   - vars/master_vars.yml
+   - vars/vault.yml
+  tasks:
+  - name: generate SSH key 
+    openssh_keypair:
+      path: "~/.ssh/jenkins_master_rsa"
+      type: rsa
+      size: 4096
+      state: present
+      force: no
+    delegate_to: master
+    register: jenkins_master_rsa_var
+
+  - debug:
+      var: jenkins_master_rsa_var.public_key
+
+  - name: Add key to authorized users
+    authorized_key:
+      user: adminuser
+      state: present
+      key: "{{jenkins_master_rsa_var.public_key}}"

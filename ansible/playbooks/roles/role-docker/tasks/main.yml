@@ -1,0 +1,71 @@
+---
+# tasks file for role-docker
+
+- name: Remove old versions
+  apt:
+    name:
+      - docker-ce
+      - docker-engine
+      - docker-io
+    state: absent
+    update_cache: yes
+
+- name: Add dependencies
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+      - gnupg2
+    state: present
+
+  
+- name: Add repo keys
+  block:
+    - name: Get key repo
+      get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/trusted.gpg.d/docker.asc
+  
+    - name: Get repo
+      apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/docker.asc] https://download.docker.com/linux/ubuntu focal stable"
+        state: present
+      
+
+- name: Install Docker
+  apt:
+    name:
+     - docker-ce
+     - docker-ce-cli
+     - containerd.io
+     - docker-compose
+    state: present
+    update_cache: yes
+
+
+
+
+- name: Service is running
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Containerd is running
+  service:
+    name: containerd
+    state: started
+    enabled: true
+    
+- name: Ensure group "docker" exists
+  group:
+    name: docker
+    state: present
+
+- name: Add docker users to docker group
+  user:
+    name: adminuser
+    groups: docker
+    append: true

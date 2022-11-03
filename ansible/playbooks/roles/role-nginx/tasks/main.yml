@@ -1,0 +1,28 @@
+---
+
+- name: Install nginx webserver
+  apt:
+    name: nginx
+    state: latest
+  
+## 
+- name: Create new server block
+  template:
+    src: nginx.conf.j2
+    dest: "/etc/nginx/sites-available/{{ domain_name }}"
+    owner: root
+    group: root
+    mode: 0755
+    
+  
+- name: Create symbolic link betwen sites-available and sites-enabled
+  file:
+    src: "/etc/nginx/sites-available/{{ domain_name }}"
+    dest: "/etc/nginx/sites-enabled/{{ domain_name }}"
+    state: link
+
+
+- name: Run Nginx
+  service:
+    name: nginx
+    state: started

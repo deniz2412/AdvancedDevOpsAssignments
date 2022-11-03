@@ -1,0 +1,71 @@
+---
+
+- name: Create custom init scripts directory.
+  file:
+    path: "{{ jenkins_home }}/init.groovy.d"
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: 0775
+
+- name: Create initial user
+  template:
+    src: initial-user.groovy.j2
+    dest: "{{ jenkins_home }}/init.groovy.d/initial-user.groovy"
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+  register: jenkins_user_config
+
+
+- name: Check for init folder
+  stat: 
+    path: "{{ jenkins_init_folder }}"
+  register: jenkins_init_folder_status
+
+- name: Create jenkins init folder if it doesnt exist
+  file:
+    path: "{{ jenkins_init_folder }}"
+    state: directory
+    mode: 0644
+  when: not jenkins_init_folder_status.stat.exists
+
+
+- name: Check if jenkins_init_file exists.
+  stat:
+    path: "{{ jenkins_init_file }}"
+  register: jenkins_init_file_status
+
+- name: Create jenkins init file if it doesnt exist
+  file:
+    path: "{{ jenkins_init_file }}"
+    state: touch
+    mode: 0644
+  when: not jenkins_init_file_status.stat.exists
+
+- name: Add service tag to init file
+  copy:
+    dest: "{{ jenkins_init_file }}"
+    content: "[Service]"
+  when: not jenkins_init_file_status.stat.exists
+
+- name: Modify variables in init file
+  lineinfile:
+    dest: "{{ jenkins_init_file }}"
+    insertafter: '^Environment="{{ item.option }}='
+    regexp: '^Environment="{{ item.option }} '
+    line: 'Environment="{{ item.option }}={{ item.value }}"'
+    state: present
+    mode: 0644
+  with_items: "{{ jenkins_init_config }}"
+  register: jenkins_init_changes
+
+- name: Restart on config change
+  systemd:
+    name: jenkins
+    state: restarted
+    daemon_reload: true
+  when: >
+    jenkins_init_changes is defined and jenkins_init_changes.changed
+
+  

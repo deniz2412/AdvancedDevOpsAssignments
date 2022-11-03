@@ -1,0 +1,38 @@
+---
+# defaults file for role-jenkins
+jenkins_admin_username: admin
+jenkins_admin_password: admin
+
+#Options for config INITIAL
+jenkins_home: /var/lib/jenkins
+jenkins_listen_addr: 127.0.0.1
+jenkins_http_port: 8080
+jenkins_init_folder: "/etc/systemd/system/jenkins.service.d"
+jenkins_init_file: "{{ jenkins_init_folder }}/override.conf"
+jenkins_options: ""
+jenkins_java_options: "-Djenkins.install.runSetupWizard=false -Djava.awt.headless=true"
+
+jenkins_init_config:
+  - option: "JENKINS_OPTS"
+    value: "{{ jenkins_options }}"
+  - option: "JAVA_OPTS"
+    value: "{{ jenkins_java_options }}"
+  - option: "JENKINS_HOME"
+    value: "{{ jenkins_home }}"
+  - option: "JENKINS_PORT"
+    value: "{{ jenkins_http_port }}"
+
+jenkins_plugins:
+  - blueocean
+  - build-timeout
+  - credentials-binding
+  - git
+  - github-branch-source
+  - matrix-auth
+  - pipeline-stage-view
+  - ssh-slaves
+  - workflow-aggregator
+  - ws-cleanup
+  - timestamper
+  - delivery-pipeline-plugin
+  - build-pipeline-plugin

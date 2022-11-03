@@ -1,0 +1,8 @@
+---
+- name: Setup worker
+  hosts: worker
+  become: true
+  vars_files:
+   - vars/worker_vars.yml
+  roles:
+    - role-docker

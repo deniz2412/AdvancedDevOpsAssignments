@@ -1,0 +1,27 @@
+---
+- name: Create Jenkins updates directory
+  file:
+    path: "{{ jenkins_home }}/updates"
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+
+- name: Install Jenkins plugins
+  jenkins_plugin:
+    name: "{{ item }}"
+    jenkins_home: "{{ jenkins_home }}"
+    url_username: "{{ jenkins_admin_username }}"
+    url_password: "{{ jenkins_admin_password }}"
+    state: present
+    timeout: 20
+    url: "http://{{ jenkins_listen_addr }}:{{ jenkins_http_port }}"
+    with_dependencies: true
+  with_items: "{{ jenkins_plugins }}"
+  when: jenkins_admin_password | default(false)
+  notify: Restart jenkins
+  register: plugin_result
+  until: plugin_result is success
+  retries: 2
+  delay: 5
+

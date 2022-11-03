@@ -1,0 +1,17 @@
+---
+- name: Setup master
+  hosts: master
+  become: true
+  vars_files:
+   - vars/master_vars.yml
+   - vars/vault.yml
+  roles:
+    - role-jenkins
+  tasks:
+   - name: generate SSH key 
+      openssh_keypair:
+        path: "~/.ssh/jenkins_master_rsa"
+        type: rsa
+        size: 4096
+        state: present
+        force: no
