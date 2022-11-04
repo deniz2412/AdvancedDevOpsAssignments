@@ -35,13 +35,11 @@ pipeline{
                         echo 'Building with Java 11'
                          }
                 }
-                waitUntil(){
                 stage('Java 17'){
                     steps{
                         echo 'Building with Java 17 but only after Java 11 is completed and successfully'
                          }
-                }   
-
+                }
 
 
 
