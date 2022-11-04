@@ -33,7 +33,6 @@ pipeline{
                 stage('Java 11'){
                     steps{
                         echo 'Building with Java 11'
-                        def java11Complete = true
                          }
                 }
                 waitUntil(){
