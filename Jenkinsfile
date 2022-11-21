@@ -79,7 +79,7 @@ pipeline {
         stage('Prepare delivery env'){
             steps{
                 dir('delivery'){
-                    sh 'mv /../community/logicaldoc-webapp/target/logicaldoc-webapp-8.8.3.war ./logicaldoc.war'
+                    sh 'mv ../community/logicaldoc-webapp/target/logicaldoc-webapp-8.8.3.war ./logicaldoc.war'
                     checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[credentialsId: 'git', url: 'git@github.com:deniz2412/AdvancedDevOpsAssignments.git']]]
                 }
             }
