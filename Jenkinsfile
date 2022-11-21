@@ -87,16 +87,22 @@ pipeline {
         stage('Build Docker image'){
             steps{
                 dir('delivery'){
-                    app=docker.build("denizh2412/ld")   
+                    script{
+                        app=docker.build("denizh2412/ld")    
+                    }
+                    
             }
         }
         }
         stage('Push image'){
             steps{
                 dir('delivery'){
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerID') {
-                    app.push("${env.BUILD_NUMBER}")
-                    app.push("latest")
+                    script{
+                        docker.withRegistry('https://registry.hub.docker.com', 'dockerID') {
+                        app.push("${env.BUILD_NUMBER}")
+                        app.push("latest")
+                    }
+                    
                 }
                 }
             }
