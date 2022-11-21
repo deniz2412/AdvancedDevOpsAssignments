@@ -11,3 +11,7 @@
 /ansible/playbooks/vars/vault.yml
 /infrastructure/terraform/.terraform/
 /logicaldoc/
+jenkins/Jenkinsfile
+infrastructure/terraform/.terraform.lock.hcl
+infrastructure/terraform/terraform.tfstate
+infrastructure/terraform/terraform.tfstate.backup
