@@ -33,7 +33,7 @@ pipeline {
         stage('Validate Services'){
             steps{
                 dir('community') {
-                sh 'mvn validate'
+                //sh 'mvn validate'
 
                }
             }
@@ -41,7 +41,7 @@ pipeline {
         stage('Compile Services'){
             steps{
                 dir('community') {
-                sh 'mvn compile'
+                //sh 'mvn compile'
 
                }
             }
@@ -49,7 +49,7 @@ pipeline {
         stage('Unit Test Services'){
             steps{
                 dir('community') {
-                sh 'mvn -T 5 -Dmaven.test.failure.ignore=true test'
+                //sh 'mvn -T 5 -Dmaven.test.failure.ignore=true test'
 
                }
             }
@@ -57,7 +57,7 @@ pipeline {
         stage('Package Services'){
             steps{
                 dir('community') {
-                sh 'mvn -Dmaven.test.skip=true package'
+                //sh 'mvn -Dmaven.test.skip=true package'
 
                }
             }
@@ -65,7 +65,7 @@ pipeline {
         stage('Integration test'){
             steps{
                 dir('community') {
-                sh 'mvn -T 5 -Dmaven.test.failure.ignore=true verify'
+                //sh 'mvn -T 5 -Dmaven.test.failure.ignore=true verify'
                }
             }
         }
