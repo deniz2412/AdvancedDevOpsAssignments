@@ -1,12 +1,10 @@
 #!/bin/sh
 
-
-cd /mnt/c/Users/denizh/Desktop/AdvancedDevOpsAssignments/logicaldoc/tomcat/webapps/ROOT
-
-until [ -f ./detectmobile.jsp ]
+until [ -f ./tomcat/webapps/logicaldoc/detectmobile.jsp ]
 do
      sleep 30
 done
 echo "File found"
+
+sed -i '7,$d' ./tomcat/webapps/logicaldoc/detectmobile.jsp
 exit
-sed '7,$d' ./detectmobile.jsp
