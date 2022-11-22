@@ -57,7 +57,7 @@ pipeline {
         stage('Package Services'){
             steps{
                 dir('community') {
-                //sh 'mvn -Dmaven.test.skip=true package'
+                sh 'mvn -Dmaven.test.skip=true package'
 
                }
             }
@@ -72,7 +72,7 @@ pipeline {
         stage('Install Services'){
             steps{
                 dir('community') {
-                sh 'mvn clean -Dmaven.test.skip=true package'
+                sh 'mvn clean -Dmaven.test.skip=true install'
                }
             }
         }
