@@ -2,7 +2,7 @@ FROM openjdk:11-jdk
 
 ENV CATALINA_HOME="/logicaldoc/tomcat"
 
-ADD scripts logicaldoc/scripts
+COPY scripts/. logicaldoc/scripts/.
 RUN sh scripts/setup.sh
 RUN sh scripts/modifyapp.sh
 
