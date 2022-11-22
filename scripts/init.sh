@@ -1,8 +1,3 @@
 #!/bin/bash
-set -m
-
-./tomcat/bin/catalina.sh run &
-
-./scripts/cleanup.sh
-
-fg %1
+nohup ./scripts/cleanup.sh &
+./tomcat/bin/catalina.sh run 
