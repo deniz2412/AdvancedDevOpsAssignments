@@ -1,4 +1,4 @@
-FROM openjdk:11-jdk
+FROM amazoncorretto:11-alpine-jdk
 
 ENV CATALINA_HOME="/logicaldoc/tomcat"
 
