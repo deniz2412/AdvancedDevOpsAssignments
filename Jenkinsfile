@@ -3,6 +3,9 @@ pipeline {
     agent {
   label 'worker-01'
 }
+environment{
+    regCreds = 'dockerCred'
+}
     tools {
         jdk 'JDK'
         maven "mvn"
@@ -98,7 +101,7 @@ pipeline {
             steps{
                 dir('delivery'){
                     script{
-                        docker.withRegistry('https://registry.hub.docker.com', dockerID) {
+                        docker.withRegistry('https://registry.hub.docker.com', regCreds) {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
                     }
