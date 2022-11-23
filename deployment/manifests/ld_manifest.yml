@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logicaldoc
+spec:
+  selector:
+    matchLabels:
+      app: logicaldoc
+  template:
+    metadata:
+      labels:
+        app: logicaldoc
+    spec:
+      containers:
+        - name: logicaldoc
+          image: denizh2412/ld:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_CONFIG
+              valueFrom:
+                configMapKeyRef:
+                  name: ld-config
+                  key: context.properties
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-password
+                  key: DB_PASSWORD
+      volumes:
+        - name: ld-config
+          configMap:
+            name: ld-config
+            items:
+              - key: context.properties
+                path: context.properties

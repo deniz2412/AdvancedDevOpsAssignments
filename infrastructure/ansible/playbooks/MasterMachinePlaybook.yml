@@ -7,6 +7,8 @@
    - vars/vault.yml
   roles:
     - role-jenkins
+    - role-nginx
+    - role-certification
   tasks:
    - name: generate SSH key 
       openssh_keypair:
