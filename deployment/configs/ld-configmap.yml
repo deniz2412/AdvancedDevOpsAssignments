@@ -6,4 +6,4 @@ metadata:
   labels:
     app: logicaldoc
 data:
-{{ (.Files.Glob "./context.properties").AsConfig | indent 2}}
+  {{ (.Files.Glob "./context.properties").AsConfig | indent 2}}

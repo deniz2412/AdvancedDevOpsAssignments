@@ -3,6 +3,7 @@ module "import-rg" {
   source = "./modules/import-resource-group"
 
 }
+
 locals {
   tags = {
     OWNER = "Deniz"
@@ -47,6 +48,7 @@ module "create-worker-jenkins-vm" {
     ROLE  = "Worker"
 
   })
+  size = "Standard_B2ms"
 }
 
 module "deploy-cluster" {
@@ -59,5 +61,16 @@ module "deploy-cluster" {
     GROUP = "Production"
     ROLE  = "Cluster"
 
+  })
+}
+
+module "store-tfstate" {
+  source = "./modules/store-tfstate"
+  location = module.import-rg.location
+  rg-name = module.import-rg.name
+  prefix = var.prefix
+  tags = merge(local.tags, {
+    GROUP = "Infrastructure"
+    ROLE = "Storage"
   })
 }

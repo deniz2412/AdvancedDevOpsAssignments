@@ -27,3 +27,7 @@ variable "domain_name_label" {
 variable "tags" {
   type = map(string)  
 }
+variable "size" {
+  type = string
+  default ="Standard_B2s"  
+}

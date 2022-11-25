@@ -30,13 +30,13 @@ resource "azurerm_linux_virtual_machine" "vm" {
   location = var.location
   name = "${var.prefix}-VM-${var.vm-name}"
   resource_group_name = var.rg-name
-  size = "Standard_B2s"
+  size = var.size
   admin_username = "adminuser"
   network_interface_ids = [azurerm_network_interface.network-interface.id,
   ]
    admin_ssh_key {
      username = "adminuser"
-     public_key = file("C:/Users/denizh/Documents/Keys/denizkey.txt")
+     public_key = file("~/publickey.txt")
    }
    os_disk {
      caching = "ReadWrite"
