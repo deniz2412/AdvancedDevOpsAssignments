@@ -14,10 +14,10 @@ terraform {
     }
   }
   backend "azurerm" {
-    resource_group_name = "RES-GRP-CT360-TUTORING-ADV-7F52F"
+    resource_group_name  = "RES-GRP-CT360-TUTORING-ADV-7F52F"
     storage_account_name = "denizhstorageaccount"
-    container_name = "tfstate"
-    key = "terraform.tfstate"
+    container_name       = "tfstate"
+    key                  = "terraform.tfstate"
   }
 }
 

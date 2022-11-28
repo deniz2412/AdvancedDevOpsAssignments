@@ -8,8 +8,8 @@ locals {
   tags = {
     OWNER = "Deniz"
   }
-
 }
+
 module "create-network" {
   source   = "./modules/create-network"
   location = module.import-rg.location
@@ -65,12 +65,12 @@ module "deploy-cluster" {
 }
 
 module "store-tfstate" {
-  source = "./modules/store-tfstate"
+  source   = "./modules/store-tfstate"
   location = module.import-rg.location
-  rg-name = module.import-rg.name
-  prefix = var.prefix
+  rg-name  = module.import-rg.name
+  prefix   = var.prefix
   tags = merge(local.tags, {
     GROUP = "Infrastructure"
-    ROLE = "Storage"
+    ROLE  = "Storage"
   })
 }

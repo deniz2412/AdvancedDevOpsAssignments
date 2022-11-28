@@ -1,6 +1,6 @@
 FROM amazoncorretto:11-alpine-jdk
 WORKDIR /home/logicaldoc/
-ENV CATALINA_HOME="./tomcat"
+ENV CATALINA_HOME="/home/logicaldoc/tomcat"
 RUN apk add \
     curl \    
     unzip \    

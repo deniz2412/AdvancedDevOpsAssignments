@@ -17,20 +17,17 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            - name: DB_CONFIG
-              valueFrom:
-                configMapKeyRef:
-                  name: ld-config
-                  key: context.properties
-            - name: DB_PASSWORD
+            - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: db-password
-                  key: DB_PASSWORD
+                  key: POSTGRES_PASSWORD
+          volumeMounts:
+            - name: ld-config
+              mountPath: /home/logicaldoc/conf/context.properties
+              subPath: context.properties
       volumes:
         - name: ld-config
           configMap:
             name: ld-config
-            items:
-              - key: context.properties
-                path: context.properties
+            
