@@ -13,21 +13,28 @@ spec:
     spec:
       containers:
         - name: logicaldoc
-          image: denizh2412/ld:latest
+          image: logicaldoc/logicaldoc-ce:latest
           ports:
             - containerPort: 8080
           env:
-            - name: POSTGRES_PASSWORD
+            - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: db-password
                   key: POSTGRES_PASSWORD
+          envFrom:
+          - configMapRef:
+              name: ld-config
           volumeMounts:
-            - name: ld-config
-              mountPath: /home/logicaldoc/conf/context.properties
-              subPath: context.properties
-      volumes:
-        - name: ld-config
-          configMap:
-            name: ld-config
+          - mountPath: /LogicalDoc/conf
+            name: ldoc-conf-v
+          - mountPath: /LogicalDoc/repository
+            name: ldoc-repository-v
             
+      volumes:
+      - name: ldoc-conf-v
+        persistentVolumeClaim:
+            claimName: ldoc-conf-claim
+      - name: ldoc-repository-v
+        persistentVolumeClaim:
+          claimName: ldoc-repository-claim

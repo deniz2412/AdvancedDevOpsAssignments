@@ -1,0 +1,59 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ldoc-conf-v
+  labels:
+    type: local
+    app: logicaldoc
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/opt/logicaldoc/conf"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ldoc-conf-claim
+  labels:
+    app: logicaldoc
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ldoc-repository-v
+  labels:
+    type: local
+    app: logicaldoc
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/opt/logicaldoc/repository"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ldoc-repository-claim
+  labels:
+    app: logicaldoc
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: db
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: postgres
@@ -16,6 +16,8 @@ spec:
       - name: db
         image: postgres:14.0
         imagePullPolicy: "IfNotPresent"
+        securityContext:
+          runAsUser: 999
         ports:
           - containerPort: 5432
         env:
@@ -24,9 +26,16 @@ spec:
             secretKeyRef:
               name: db-password
               key: POSTGRES_PASSWORD
-        envFrom:
-        - configMapRef:
-            name: db-config
+        - name: POSTGRES_USER
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: POSTGRES_USER
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: POSTGRES_DB
         volumeMounts:
           - mountPath: /var/lib/postgresql/data
             name: db-pv-volume

@@ -6,10 +6,11 @@ metadata:
   labels:
     app: logicaldoc
 data:
-  context.properties:
-    jdbc.dbms=postgres
-    jdbc.driver=org.postgresql.Driver
-    jdbc.password=${POSTGRES_PASSWORD}
-    jdbc.username=${POSTGRES_USER}
-    jdbc.url=jdbc.url=jdbc:postgresql://${DB_SERVICE_HOST}:5432/logicaldoc
-    jdbc.cp=dbcp
+  LDOC_VERSION: "8.7.3"
+  LDOC_MEMORY: "2500"
+  DEBIAN_FRONTEND: "noninteractive"
+  CATALINA_HOME: "/opt/logicaldoc/tomcat"
+  DB_ENGINE: "postgres"
+  DB_MANUALURL: "true"
+  DB_URL: "jdbc:postgresql://db:5432/postgres"
+  DB_USER: admin
