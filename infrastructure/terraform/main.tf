@@ -51,12 +51,22 @@ module "create-worker-jenkins-vm" {
   size = "Standard_B2ms"
 }
 
+module "application-gateway" {
+  source = "./modules/create-appgw"
+  location = module.import-rg.location
+  rg-name  = module.import-rg.name
+  prefix   = var.prefix
+  aks_fqdn = module.deploy-cluster.fqdn
+  tags = local.tags
+}
 module "deploy-cluster" {
   source   = "./modules/deploy-k8s"
   location = module.import-rg.location
   rg-name  = module.import-rg.name
   role     = "prod"
   prefix   = var.prefix
+  agid = module.application-gateway.agid
+  agname = module.application-gateway.agname
   tags = merge(local.tags, {
     GROUP = "Production"
     ROLE  = "Cluster"

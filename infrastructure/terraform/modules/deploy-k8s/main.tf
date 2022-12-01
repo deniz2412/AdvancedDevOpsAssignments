@@ -26,6 +26,10 @@ resource "azurerm_kubernetes_cluster" "cluster" {
 
     }
   }
+  ingress_application_gateway {
+    gateway_id = var.agid
+
+  }
   tags = var.tags
 
 }

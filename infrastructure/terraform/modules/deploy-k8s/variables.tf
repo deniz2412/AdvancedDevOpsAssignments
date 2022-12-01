@@ -13,6 +13,12 @@ variable "prefix" {
   type = string
 
 }
+variable "agid" {
+  type = string
+}
+variable "agname" {
+  type = string
+}
 variable "tags" {
   type = map(string)
 }

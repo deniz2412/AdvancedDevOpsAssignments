@@ -6,7 +6,9 @@ output "client_certificate" {
 output "kubernetes_cluster_name" {
   value = azurerm_kubernetes_cluster.cluster.name
 }
-
+output "fqdn" {
+  value = azurerm_kubernetes_cluster.cluster.fqdn
+}
 output "kube_config" {
   value = azurerm_kubernetes_cluster.cluster.kube_config_raw
 
