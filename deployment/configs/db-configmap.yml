@@ -1,3 +1,5 @@
+#Database configmap with basic ENV vars required to install a postgresdb
+
 apiVersion : v1
 kind: ConfigMap
 metadata:

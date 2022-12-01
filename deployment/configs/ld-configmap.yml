@@ -1,3 +1,4 @@
+#Logicaldoc configmap containing credentials to db, url and installation parameters. Minimum needed memory is  1000MB (unit is expressed in MB)
 apiVersion : v1
 kind: ConfigMap
 metadata:

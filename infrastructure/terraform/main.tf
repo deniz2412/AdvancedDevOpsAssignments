@@ -3,13 +3,13 @@ module "import-rg" {
   source = "./modules/import-resource-group"
 
 }
-
+#Local tag declaration used in every module
 locals {
   tags = {
     OWNER = "Deniz"
   }
 }
-
+#Provision Virtual network required in the resource group
 module "create-network" {
   source   = "./modules/create-network"
   location = module.import-rg.location
@@ -19,7 +19,7 @@ module "create-network" {
     GROUP = "Network"
   })
 }
-
+#Provision master machine for CI/CD pipeline
 module "create-master-jenkins-vm" {
   source            = "./modules/create-machine"
   location          = module.import-rg.location
@@ -34,7 +34,7 @@ module "create-master-jenkins-vm" {
     ROLE  = "Master"
   })
 }
-
+#Provision worker machine for CI/CD pipeline
 module "create-worker-jenkins-vm" {
   source    = "./modules/create-machine"
   location  = module.import-rg.location
@@ -50,7 +50,7 @@ module "create-worker-jenkins-vm" {
   })
   size = "Standard_B2ms"
 }
-
+#Creates AZ Application Gateway
 module "application-gateway" {
   source = "./modules/create-appgw"
   location = module.import-rg.location
@@ -59,6 +59,7 @@ module "application-gateway" {
   aks_fqdn = module.deploy-cluster.fqdn
   tags = local.tags
 }
+#Cluster deployment- module with all required vars
 module "deploy-cluster" {
   source   = "./modules/deploy-k8s"
   location = module.import-rg.location
@@ -73,7 +74,7 @@ module "deploy-cluster" {
 
   })
 }
-
+#Export tfstate to cloud storage
 module "store-tfstate" {
   source   = "./modules/store-tfstate"
   location = module.import-rg.location

@@ -23,3 +23,5 @@
       user: adminuser
       state: present
       key: "{{jenkins_master_rsa_var.public_key}}"
+
+#Playbook makes sure a ssh key is generated and deploys the public key to the worker so it recognizes it

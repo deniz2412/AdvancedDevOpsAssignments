@@ -6,3 +6,5 @@
    - vars/worker_vars.yml
   roles:
     - role-docker
+
+#Playbook only installs docker on the worker machine and everything required to run it

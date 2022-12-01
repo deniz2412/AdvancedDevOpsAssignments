@@ -1,3 +1,4 @@
+#Volumes and volume claims for logicaldoc required for normal function
 kind: PersistentVolume
 apiVersion: v1
 metadata:

@@ -17,3 +17,5 @@
         size: 4096
         state: present
         force: no
+
+#Playbook runs jenkins,nginx(reverse_proxy) and certification roles. Variables are supplied along with the vault. One of the task is generating a default ssh key for connecting to worker
